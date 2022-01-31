@@ -10,8 +10,7 @@ export default function Kuveyt({ amountRecievedTr, dollarSent, exchangeRateAfter
 
     useEffect(() => {
         const interval = setInterval(() => {
-            // fetch('https://go-proxy-kuveyt.herokuapp.com/')
-            fetch('https://www.kuveytturk.com.tr/finans-portali/')
+            fetch('https://go-proxy-kuveyt.herokuapp.com/')
                 .then((result) => result.text())
                 .then((content) => setCurrentExRate(extractUSD(content)));
         }, 5000);
