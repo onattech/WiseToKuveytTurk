@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/WiseToKuveytTurk/static/css/main.e6c13ad2.css",
-    "main.js": "/WiseToKuveytTurk/static/js/main.99bf947b.js",
+    "main.js": "/WiseToKuveytTurk/static/js/main.d4eb80e4.js",
     "static/media/wise.svg": "/WiseToKuveytTurk/static/media/wise.9557da2a6cb1195fec4d2eec911bc855.svg",
     "index.html": "/WiseToKuveytTurk/index.html",
     "main.e6c13ad2.css.map": "/WiseToKuveytTurk/static/css/main.e6c13ad2.css.map",
-    "main.99bf947b.js.map": "/WiseToKuveytTurk/static/js/main.99bf947b.js.map"
+    "main.d4eb80e4.js.map": "/WiseToKuveytTurk/static/js/main.d4eb80e4.js.map"
   },
   "entrypoints": [
     "static/css/main.e6c13ad2.css",
-    "static/js/main.99bf947b.js"
+    "static/js/main.d4eb80e4.js"
   ]
 }
