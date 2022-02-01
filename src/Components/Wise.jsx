@@ -8,7 +8,7 @@ import wise from '../wise.svg';
 
 import { useEffect, useState } from 'react';
 
-export default function Wise({ amountRecievedTr, setAmountRecievedTRY, dollarSent, setDollarSent, exchangeRateAfterFees, setExchangeRateAfterFees }) {
+export default function Wise({ state: { usdSent, exRateAfterFees, tryReceived }, setState }) {
     const [fee, setFee] = useState('');
     const [exchangeRate, setExchangeRate] = useState('');
 
@@ -16,18 +16,18 @@ export default function Wise({ amountRecievedTr, setAmountRecievedTRY, dollarSen
 
     // Set fees in percentage
     useEffect(() => {
-        if (dollarSent && fee) {
-            setFeesInPercentage(((fee / dollarSent) * 100).toFixed(2));
+        if (usdSent && fee) {
+            setFeesInPercentage(((fee / usdSent) * 100).toFixed(2));
         }
-    }, [dollarSent, fee]);
+    }, [usdSent, fee]);
 
     // Set exchange rate after fees applied and TRY to be recieved
     useEffect(() => {
-        if (dollarSent && fee && exchangeRate) {
-            setExchangeRateAfterFees(exchangeRateAfterFeeCut(exchangeRate, fee, dollarSent));
-            setAmountRecievedTRY(tryReceived(exchangeRate, fee, dollarSent));
+        if (usdSent && fee && exchangeRate) {
+            setState({ exRateAfterFees: exchangeRateAfterFeeCut(exchangeRate, fee, usdSent) });
+            setState({ tryReceived: tryReceivedFn(exchangeRate, fee, usdSent) });
         }
-    }, [dollarSent, fee, exchangeRate]);
+    }, [usdSent, fee, exchangeRate]);
 
     return (
         <Card sx={{ width: 500 }}>
@@ -36,7 +36,7 @@ export default function Wise({ amountRecievedTr, setAmountRecievedTRY, dollarSen
                 <Box display='flex' gap={2}>
                     <TextField
                         onChange={(e) => {
-                            setDollarSent(e.target.value);
+                            setState({ usdSent: e.target.value });
                         }}
                         size='small'
                         label='Amount being sent'
@@ -73,7 +73,7 @@ export default function Wise({ amountRecievedTr, setAmountRecievedTRY, dollarSen
                 {/* Fees in percentage */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', height: 24 }}>
                     <Typography variant='body2'>Fees in percentage</Typography>
-                    {dollarSent && fee ? ( //
+                    {usdSent && fee ? ( //
                         <Typography variant='number'>% {feesInPercentage}</Typography>
                     ) : null}
                 </Box>
@@ -81,16 +81,16 @@ export default function Wise({ amountRecievedTr, setAmountRecievedTRY, dollarSen
                 {/* Exchange rate after fees applied */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', height: 24 }}>
                     <Typography variant='body2'>Exchange rate after fees applied</Typography>
-                    {exchangeRate && fee && dollarSent ? ( //
-                        <Typography variant='number'>{exchangeRateAfterFees}</Typography>
+                    {exchangeRate && fee && usdSent ? ( //
+                        <Typography variant='number'>{exRateAfterFees}</Typography>
                     ) : null}
                 </Box>
 
                 {/* Amount to be received */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', height: 24 }}>
                     <Typography variant='body2'>Amount to be received </Typography>
-                    {exchangeRate && fee && dollarSent ? ( //
-                        <Typography variant='number'>{amountRecievedTr} TRY</Typography>
+                    {exchangeRate && fee && usdSent ? ( //
+                        <Typography variant='number'>{tryReceived} TRY</Typography>
                     ) : null}
                 </Box>
             </CardContent>
@@ -103,6 +103,6 @@ function exchangeRateAfterFeeCut(exchange, percentage, amount) {
     return (exchange * ((100 - parseFloat((percentage / amount) * 100)) / 100)).toFixed(4);
 }
 
-function tryReceived(exchange, percentage, amount) {
+function tryReceivedFn(exchange, percentage, amount) {
     return (exchange * ((100 - parseFloat((percentage / amount) * 100)) / 100) * amount).toFixed(2);
 }

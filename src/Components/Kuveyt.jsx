@@ -5,7 +5,7 @@ import Typography from './CustomTypography';
 import Kv from '../kuveyt-turk.png';
 import { useEffect, useState } from 'react';
 
-export default function Kuveyt({ amountRecievedTr, dollarSent, exchangeRateAfterFees }) {
+export default function Kuveyt({ state: { usdSent, exRateAfterFees, tryReceived } }) {
     const [currentExRate, setCurrentExRate] = useState('');
 
     useEffect(() => {
@@ -32,15 +32,15 @@ export default function Kuveyt({ amountRecievedTr, dollarSent, exchangeRateAfter
                 {/* Exchange rate to break even */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Typography variant='body2'>Exchange rate to break even</Typography>
-                    {exchangeRateAfterFees ? <Typography variant='number'>{(exchangeRateAfterFees * 0.998).toFixed(4)}</Typography> : null}
+                    {exRateAfterFees ? <Typography variant='number'>{(exRateAfterFees * 0.998).toFixed(4)}</Typography> : null}
                 </Box>
 
                 {/* Exchange rate difference */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Typography variant='body2'>Exchange rate difference</Typography>
-                    {exchangeRateAfterFees ? (
-                        <Typography variant='number' color={getExRateDiff(currentExRate[1], exchangeRateAfterFees) > 0 ? '#2ead4b' : 'red'}>
-                            {getExRateDiff(currentExRate[1], exchangeRateAfterFees)}
+                    {exRateAfterFees ? (
+                        <Typography variant='number' color={getExRateDiff(currentExRate[1], exRateAfterFees) > 0 ? '#2ead4b' : 'red'}>
+                            {getExRateDiff(currentExRate[1], exRateAfterFees)}
                         </Typography>
                     ) : null}
                 </Box>
@@ -48,15 +48,15 @@ export default function Kuveyt({ amountRecievedTr, dollarSent, exchangeRateAfter
                 {/* USD at current exchange rate */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Typography variant='body2'>USD at current exchange rate</Typography>
-                    {!isNaN(amountRecievedTr) ? <Typography variant='number'>{((amountRecievedTr / currentExRate[1]) * 0.998).toFixed(2)} USD</Typography> : null}
+                    {!isNaN(tryReceived) ? <Typography variant='number'>{((tryReceived / currentExRate[1]) * 0.998).toFixed(2)} USD</Typography> : null}
                 </Box>
 
                 {/* Gain */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Typography variant='body2'>Gain</Typography>
-                    {!isNaN(amountRecievedTr) ? (
-                        <Typography variant='number' color={getGain(amountRecievedTr, currentExRate, dollarSent) > 0 ? '#2ead4b' : 'red'}>
-                            {getGain(amountRecievedTr, currentExRate, dollarSent)} USD
+                    {!isNaN(tryReceived) ? (
+                        <Typography variant='number' color={getGain(tryReceived, currentExRate, usdSent) > 0 ? '#2ead4b' : 'red'}>
+                            {getGain(tryReceived, currentExRate, usdSent)} USD
                         </Typography>
                     ) : null}
                 </Box>
@@ -78,6 +78,6 @@ function getExRateDiff(c, e) {
     return ((c - e * 0.998) * -1).toFixed(2);
 }
 
-function getGain(amountRecievedTr, currentExRate, dollarSent) {
-    return ((amountRecievedTr / currentExRate[1]) * 0.998 - dollarSent).toFixed(2);
+function getGain(amountReceivedTr, currentExRate, dollarSent) {
+    return ((amountReceivedTr / currentExRate[1]) * 0.998 - dollarSent).toFixed(2);
 }

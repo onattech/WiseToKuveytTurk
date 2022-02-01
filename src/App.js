@@ -2,12 +2,18 @@ import Grid from '@mui/material/Grid';
 import Typography from './Components/CustomTypography';
 import Wise from './Components/Wise';
 import Kuveyt from './Components/Kuveyt';
-import { useState } from 'react';
+import { useReducer } from 'react';
+
+function reducer(currentState, newState) {
+    return { ...currentState, ...newState };
+}
 
 function App() {
-    const [amountRecievedTr, setAmountRecievedTRY] = useState();
-    const [dollarSent, setDollarSent] = useState('');
-    const [exchangeRateAfterFees, setExchangeRateAfterFees] = useState(null);
+    const [state, setState] = useReducer(reducer, {
+        tryReceived_: null,
+        usdSent: null,
+        exRateAfterFees: null,
+    });
 
     return (
         <Grid container spacing={2} direction='column' alignContent='center'>
@@ -20,18 +26,11 @@ function App() {
             </Grid>
 
             <Grid item>
-                <Wise
-                    amountRecievedTr={amountRecievedTr}
-                    setAmountRecievedTRY={setAmountRecievedTRY}
-                    dollarSent={dollarSent}
-                    setDollarSent={setDollarSent}
-                    exchangeRateAfterFees={exchangeRateAfterFees}
-                    setExchangeRateAfterFees={setExchangeRateAfterFees}
-                />
+                <Wise state={state} setState={setState} />
             </Grid>
 
             <Grid item>
-                <Kuveyt exchangeRateAfterFees={exchangeRateAfterFees} amountRecievedTr={amountRecievedTr} dollarSent={dollarSent} />
+                <Kuveyt state={state} />
             </Grid>
         </Grid>
     );
