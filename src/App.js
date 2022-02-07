@@ -22,7 +22,9 @@ function App() {
                     Conversion calculation
                 </Typography>
 
-                <Typography variant='body1'>Provide transfer information to calculate the exchange rate to break even.</Typography>
+                <Typography variant='body1' width='500px'>
+                    Provide transfer information to calculate the buy back exchange rate to break even.
+                </Typography>
             </Grid>
 
             <Grid item>

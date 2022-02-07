@@ -29,6 +29,13 @@ export default function Wise({ state: { usdSent, exRateAfterFees, tryReceived },
         }
     }, [usdSent, fee, exchangeRate]);
 
+    // Alert
+    useEffect(() => {
+        if (exchangeRate[1] > 13.7) {
+            alert('alert');
+        }
+    }, [exchangeRate]);
+
     return (
         <Card sx={{ width: 500 }}>
             <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
