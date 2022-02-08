@@ -1,40 +1,53 @@
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Box from '@mui/material/Box';
-import Typography from './CustomTypography';
-import Chip from '@mui/material/Chip';
-import Kv from '../kuveyt-turk.png';
-import useGetExRate from '../Hooks/useGetExRate';
+import Typography from '../CustomTypography';
+import Kv from './kuveyt-turk.png';
+import useGetExRate from '../../Hooks/useGetExRate';
 import ching from './ching.mp3';
 import { useEffect, useState } from 'react';
+import LiveExRateDisplay from './LiveExRateDisplay';
+import ExRateDeltas from './ExRateDeltas';
 
 export default function Kuveyt({ state: { usdSent, exRateAfterFees, tryReceived } }) {
     // Custom hook
     const [currentExRate, isLive] = useGetExRate();
 
+    // Local state
+    const [stream, setStream] = useState([]);
+    const [lastUpdateStatus, setLastUpdateStatus] = useState('same');
+    console.log('🚀 ~ file: Kuveyt.jsx ~ line 19 ~ Kuveyt ~ stream', stream);
+
     let audio = new Audio(ching);
     // audio.play();
 
-    const [stream, setStream] = useState([]);
-    console.log('🚀 ~ file: Kuveyt.jsx ~ line 19 ~ Kuveyt ~ stream', stream);
-
     useEffect(() => {
         setStream([...stream, [...currentExRate, new Date().toISOString()]]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+
+        if (stream.length < 2) return;
+        if (currentExRate[1] > stream.at(-2)[1]) {
+            setLastUpdateStatus('increased');
+        } else if (currentExRate[1] < stream.at(-2)[1]) {
+            setLastUpdateStatus('decreased');
+        } else {
+            setLastUpdateStatus('same');
+        }
     }, [currentExRate]);
 
     return (
         <>
             <Card sx={{ width: 500 }}>
                 <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                    <img alt='KuveytTurk' src={Kv} style={{ width: 125 }} />
+                    <Box display='flex' alignItems='center' justifyContent='space-between'>
+                        <img alt='KuveytTurk' src={Kv} style={{ width: 125 }} />
+                        <ExRateDeltas stream={stream} currentExRate={currentExRate} />
+                    </Box>
 
                     {/* Current USD/TRY exchange rate */}
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mr: '-10ppx' }}>
                         <Typography variant='body2'>Current USD/TRY exchange rate</Typography>
-                        <Typography variant='number'>
-                            {isLive ? <Chip label='Live ●' variant='outlined' size='small' sx={{ background: 'white', color: 'green', mr: 1 }} /> : null}
-                            {currentExRate[1]}
-                        </Typography>
+                        <LiveExRateDisplay isLive={isLive} currentExRate={currentExRate[1]} lastUpdateStatus={lastUpdateStatus} />
                     </Box>
 
                     {/* Exchange rate to break even */}
@@ -70,10 +83,11 @@ export default function Kuveyt({ state: { usdSent, exRateAfterFees, tryReceived 
                     </Box>
                 </CardContent>
             </Card>
-            <p>One minute ago</p>
-            <div>Time difference: {(new Date(stream.at(-13)[2]) - new Date()) / 1000}</div>
-            <div>Sale rate: {stream.at(-13)[1]}</div>
-            <span>{stream.at(-13)[1] < stream.at(-1)[1] ? 'increased' : 'decreased'}</span>
+            {/* <p>One minute ago</p> */}
+            <p>DEBUG</p>
+            {/* <div>Time difference: {(new Date(stream.at(-13)[2]) - new Date()) / 1000}</div> */}
+            {/* <div>Sale rate: {stream.at(-13)[1]}</div> */}
+            {/* <span>{stream.at(-13)[1] < stream.at(-1)[1] ? 'increased' : 'decreased'}</span> */}
             <p></p>
             <Box>
                 {stream.map((a) => (
