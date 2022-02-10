@@ -36,7 +36,12 @@ function Deltas({ stream, currentExRate, minutes }) {
     if (stream.length < minutes * 12 + 1) return null;
     return (
         <Paper variant='outlined' sx={{ padding: '4px', position: 'relative' }}>
-            <Typography sx={{ position: 'absolute', background: 'white', top: -8, px: '3px', left: -10, rotate: '-25deg', color: 'orangered' }}>{minutes}m</Typography>
+            {/* Minute header */}
+            <Typography sx={{ position: 'absolute', background: 'white', top: -9, px: '3px', left: -6, color: 'slategray', lineHeight: 1, fontWeight: 'bold' }}>
+                {minutes}m
+            </Typography>
+
+            {/* Exchange rate difference between now and the provided minute mark */}
             <Typography sx={{ textAlign: 'right' }}>
                 {rateDiff(stream, minutes)}
                 {updateStatus !== 'same' ? (
@@ -51,10 +56,13 @@ function Deltas({ stream, currentExRate, minutes }) {
                     <span style={{ color: 'gray', marginLeft: 1 }}>●</span>
                 )}
             </Typography>
+
+            {/* Exchange rate at the provided minute mark */}
             <Typography>
                 {stream?.at(-12 * minutes - 1)[1]}
                 {/* {' ' + stream?.at(-12 * minutes - 1)[3]} */}
             </Typography>
+
             {/* <Typography>{new Date(stream?.at(-12 * minutes - 1)[2]).toLocaleTimeString()}</Typography> */}
         </Paper>
     );
