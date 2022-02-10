@@ -48,6 +48,7 @@ function Deltas({ stream, currentExRate, minutes }) {
                     rotate: updateStatus === 'decreased' ? '180deg' : '',
                 }}
             />
+            {stream?.at(-12 * minutes - 1)[1]} {new Date(stream?.at(-12 * minutes - 1)[2]).toLocaleTimeString()} {stream?.at(-12 * minutes - 1)[3]}
         </Box>
     );
 }

@@ -16,6 +16,7 @@ export default function Kuveyt({ state: { usdSent, exRateAfterFees, tryReceived 
     // Local state
     const [stream, setStream] = useState([]);
     const [lastUpdateStatus, setLastUpdateStatus] = useState('same');
+    const [count, setCount] = useState(1);
     if (process.env.NODE_ENV === 'development') {
         console.log('🚀 ~ file: Kuveyt.jsx ~ line 19 ~ Kuveyt ~ stream', stream);
     }
@@ -24,7 +25,9 @@ export default function Kuveyt({ state: { usdSent, exRateAfterFees, tryReceived 
     // audio.play();
 
     useEffect(() => {
-        setStream([...stream, [...currentExRate, new Date().toISOString()]]);
+        if (currentExRate.length === 0) return;
+        setStream([...stream, [...currentExRate, new Date().toISOString(), count]]);
+        setCount(count + 1);
         // eslint-disable-next-line react-hooks/exhaustive-deps
 
         if (stream.length < 2) return;
@@ -39,11 +42,16 @@ export default function Kuveyt({ state: { usdSent, exRateAfterFees, tryReceived 
 
     return (
         <>
-            <h1>Environment {process.env.NODE_ENV}</h1>
+            {process.env.NODE_ENV === 'development' ? <h1>Environment {process.env.NODE_ENV}</h1> : null}
             <Card sx={{ width: 500 }}>
                 <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                     <Box display='flex' alignItems='center' justifyContent='space-between'>
                         <img alt='KuveytTurk' src={Kv} style={{ width: 125 }} />
+                    </Box>
+
+                    {/* Exchange rate history */}
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mr: '-10ppx' }}>
+                        <Typography variant='body2'>Exchange rate history</Typography>
                         <ExRateDeltas stream={stream} currentExRate={currentExRate} />
                     </Box>
 
@@ -100,7 +108,8 @@ export default function Kuveyt({ state: { usdSent, exRateAfterFees, tryReceived 
                             <div>
                                 <span style={{ marginRight: 10 }}>{a[0]}</span>
                                 <span style={{ marginRight: 10 }}>{a[1]}</span>
-                                <span>{a[2]}</span>
+                                <span style={{ marginRight: 10 }}>{new Date(a[2]).toLocaleTimeString()}</span>
+                                <span>{a[3]}</span>
                             </div>
                         ))}
                     </Box>
