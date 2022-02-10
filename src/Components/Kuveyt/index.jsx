@@ -50,13 +50,13 @@ export default function Kuveyt({ state: { usdSent, exRateAfterFees, tryReceived 
                     </Box>
 
                     {/* Exchange rate history */}
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mr: '-10ppx' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
                         <Typography variant='body2'>Exchange rate history</Typography>
                         <ExRateDeltas stream={stream} currentExRate={currentExRate} />
                     </Box>
 
                     {/* Current USD/TRY exchange rate */}
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mr: '-10ppx' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <Typography variant='body2'>Current USD/TRY exchange rate</Typography>
                         <LiveExRateDisplay isLive={isLive} currentExRate={currentExRate[1]} lastUpdateStatus={lastUpdateStatus} />
                     </Box>
