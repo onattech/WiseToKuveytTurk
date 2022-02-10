@@ -44,13 +44,10 @@ function Deltas({ stream, currentExRate, minutes }) {
                 fontSize={16}
                 icon={faLongArrowAltUp}
                 style={{
-                    opacity: updateStatus === 'same' ? 0 : 1,
+                    // opacity: updateStatus === 'same' ? 0 : 1,
                     rotate: updateStatus === 'decreased' ? '180deg' : '',
                 }}
             />
         </Box>
     );
-    // } else {
-    // return null;
-    // }
 }

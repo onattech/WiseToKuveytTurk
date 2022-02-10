@@ -4,7 +4,6 @@ import { Box, Chip } from '@mui/material';
 import Typography from '../CustomTypography';
 
 export default function LiveExRateDisplay({ isLive, currentExRate, lastUpdateStatus }) {
-    console.log('🚀 ~ file: Kuveyt.jsx ~ line 109 ~ NewFunction ~ currentExRate', currentExRate);
     return (
         <Box display='flex' alignItems='center' gap='4px'>
             {isLive ? <Chip label='Live ●' variant='outlined' size='small' sx={{ background: 'white', color: 'green' }} /> : null}

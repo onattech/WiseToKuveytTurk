@@ -16,7 +16,9 @@ export default function Kuveyt({ state: { usdSent, exRateAfterFees, tryReceived 
     // Local state
     const [stream, setStream] = useState([]);
     const [lastUpdateStatus, setLastUpdateStatus] = useState('same');
-    console.log('🚀 ~ file: Kuveyt.jsx ~ line 19 ~ Kuveyt ~ stream', stream);
+    if (process.env.NODE_ENV === 'development') {
+        console.log('🚀 ~ file: Kuveyt.jsx ~ line 19 ~ Kuveyt ~ stream', stream);
+    }
 
     let audio = new Audio(ching);
     // audio.play();
@@ -37,6 +39,7 @@ export default function Kuveyt({ state: { usdSent, exRateAfterFees, tryReceived 
 
     return (
         <>
+            <h1>Environment {process.env.NODE_ENV}</h1>
             <Card sx={{ width: 500 }}>
                 <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                     <Box display='flex' alignItems='center' justifyContent='space-between'>
@@ -83,21 +86,26 @@ export default function Kuveyt({ state: { usdSent, exRateAfterFees, tryReceived 
                     </Box>
                 </CardContent>
             </Card>
-            {/* <p>One minute ago</p> */}
-            <p>DEBUG</p>
-            {/* <div>Time difference: {(new Date(stream.at(-13)[2]) - new Date()) / 1000}</div> */}
-            {/* <div>Sale rate: {stream.at(-13)[1]}</div> */}
-            {/* <span>{stream.at(-13)[1] < stream.at(-1)[1] ? 'increased' : 'decreased'}</span> */}
-            <p></p>
-            <Box>
-                {stream.map((a) => (
-                    <div>
-                        <span style={{ marginRight: 10 }}>{a[0]}</span>
-                        <span style={{ marginRight: 10 }}>{a[1]}</span>
-                        <span>{a[2]}</span>
-                    </div>
-                ))}
-            </Box>
+
+            {process.env.NODE_ENV === 'development' ? (
+                <Box>
+                    {/* <p>One minute ago</p> */}
+                    <p>DEBUG</p>
+                    {/* <div>Time difference: {(new Date(stream.at(-13)[2]) - new Date()) / 1000}</div> */}
+                    {/* <div>Sale rate: {stream.at(-13)[1]}</div> */}
+                    {/* <span>{stream.at(-13)[1] < stream.at(-1)[1] ? 'increased' : 'decreased'}</span> */}
+                    <p></p>
+                    <Box>
+                        {stream.map((a) => (
+                            <div>
+                                <span style={{ marginRight: 10 }}>{a[0]}</span>
+                                <span style={{ marginRight: 10 }}>{a[1]}</span>
+                                <span>{a[2]}</span>
+                            </div>
+                        ))}
+                    </Box>
+                </Box>
+            ) : null}
         </>
     );
 
