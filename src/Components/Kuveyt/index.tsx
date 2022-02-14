@@ -78,7 +78,7 @@ export default function Kuveyt({ state }: { state: ReducerProps }) {
                         <Typography variant="body2">Exchange rate difference</Typography>
                         {exRateAfterFees ? (
                             <Typography variant="number" color={getExRateDiff(currentExRate.sell, exRateAfterFees) > 0 ? '#2ead4b' : 'red'}>
-                                {getExRateDiff(currentExRate.sell, exRateAfterFees).toFixed(2)}
+                                {Math.abs(getExRateDiff(currentExRate.sell, exRateAfterFees)).toFixed(2)}
                             </Typography>
                         ) : null}
                     </Box>
@@ -90,14 +90,14 @@ export default function Kuveyt({ state }: { state: ReducerProps }) {
                     </Box>
 
                     {/* Gain */}
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Typography variant="body2">Gain</Typography>
-                        {typeof tryReceived === 'number' && typeof usdSent === 'number' ? (
+                    {typeof tryReceived === 'number' && typeof usdSent === 'number' ? (
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <Typography variant="body2">{getGain(tryReceived, currentExRate, usdSent) > 0 ? 'Gain' : 'Loss'}</Typography>
                             <Typography variant="number" color={getGain(tryReceived, currentExRate, usdSent) > 0 ? '#2ead4b' : 'red'}>
-                                {getGain(tryReceived, currentExRate, usdSent).toFixed(2)} USD
+                                {Math.abs(getGain(tryReceived, currentExRate, usdSent)).toFixed(2)} USD
                             </Typography>
-                        ) : null}
-                    </Box>
+                        </Box>
+                    ) : null}
                 </CardContent>
             </Card>
 
