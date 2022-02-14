@@ -10,7 +10,7 @@ function reducer(currentState, newState) {
 
 function App() {
     const [state, setState] = useReducer(reducer, {
-        tryReceived_: null,
+        tryReceived: null,
         usdSent: null,
         exRateAfterFees: null,
     });

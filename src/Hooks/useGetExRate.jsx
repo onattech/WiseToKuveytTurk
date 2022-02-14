@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 export default function useGetExRate() {
     const [currentExRate, setCurrentExRate] = useState([]);
+    console.log('🚀 ~ file: useGetExRate.jsx ~ line 5 ~ useGetExRate ~ currentExRate', currentExRate);
     const [isLive, setLive] = useState(false);
 
     useEffect(() => {

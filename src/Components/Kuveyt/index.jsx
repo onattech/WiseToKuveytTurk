@@ -21,7 +21,7 @@ export default function Kuveyt({ state: { usdSent, exRateAfterFees, tryReceived 
         console.log('🚀 ~ file: Kuveyt.jsx ~ line 19 ~ Kuveyt ~ stream', stream);
     }
 
-    let audio = new Audio(ching);
+    // let audio = new Audio(ching);
     // audio.play();
 
     useEffect(() => {
