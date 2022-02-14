@@ -23,6 +23,7 @@ export default function Kuveyt({ state }: { state: ReducerProps }) {
     const [lastUpdateStatus, setLastUpdateStatus] = useState<'increased' | 'decreased' | 'same'>('same')
     const [count, setCount] = useState(1)
     if (process.env.NODE_ENV === 'development') {
+        console.log('🚀updating....')
         console.log('🚀 ~ file: Kuveyt.jsx ~ line 19 ~ Kuveyt ~ streamobj', stream)
     }
 
@@ -32,16 +33,13 @@ export default function Kuveyt({ state }: { state: ReducerProps }) {
     // Update exchange rates every 5 seconds
     useEffect(() => {
         if (currentExRate.sell === '') return
-        console.log('🚀updating....')
         setStream([...stream, { buy: currentExRate.buy, sell: currentExRate.sell, date: new Date().toISOString(), count }])
         setCount(count + 1)
 
-        if (stream.length < 2) return
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        if (currentExRate.sell > stream?.at(-2)!.sell) {
+        if (stream.length < 3) return
+        if (currentExRate.sell > stream.splice(-2)[0].sell) {
             setLastUpdateStatus('increased')
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        } else if (currentExRate.sell < stream.at(-2)!.sell) {
+        } else if (currentExRate.sell < stream.splice(-2)[0].sell) {
             setLastUpdateStatus('decreased')
         } else {
             setLastUpdateStatus('same')
@@ -126,12 +124,11 @@ export default function Kuveyt({ state }: { state: ReducerProps }) {
         </>
     )
 
-    function getExRateDiff(c: number | '', e: number): number {
-        return (Number(c) - e * 0.998) * -1
+    function getExRateDiff(currentRate: number | '', rateAfterFees: number): number {
+        return (Number(currentRate) - rateAfterFees * 0.998) * -1
     }
 
-    // fix name
-    function getGain(amountReceivedTr: number, currentExRate1: { buy: number | ''; sell: number | '' }, dollarSent: number): number {
-        return (amountReceivedTr / Number(currentExRate1.sell)) * 0.998 - dollarSent
+    function getGain(amountReceivedTr: number, currentRate: { buy: number | ''; sell: number | '' }, dollarSent: number): number {
+        return (amountReceivedTr / Number(currentRate.sell)) * 0.998 - dollarSent
     }
 }

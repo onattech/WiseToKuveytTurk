@@ -31,13 +31,14 @@ export default function Wise({ state, setState }: { state: ReducerProps; setStat
     useEffect(() => {
         // If missing any of the below, clear the state calculated with those values
         if (!usdSent || !fee || !exchangeRate) {
-            setState({ exRateAfterFees: '' })
-            setState({ tryReceived: '' })
+            setState({ exRateAfterFees: '', tryReceived: '' })
         }
 
         if (usdSent && fee && exchangeRate) {
-            setState({ exRateAfterFees: exchangeRateAfterFeeCut(exchangeRate, fee, usdSent) })
-            setState({ tryReceived: tryReceivedFn(exchangeRate, fee, usdSent) })
+            setState({
+                exRateAfterFees: exchangeRateAfterFeeCut(exchangeRate, fee, usdSent), //
+                tryReceived: tryReceivedFn(exchangeRate, fee, usdSent),
+            })
         }
     }, [usdSent, fee, exchangeRate])
 
@@ -70,7 +71,7 @@ export default function Wise({ state, setState }: { state: ReducerProps; setStat
                     {/* Fees */}
                     <TextField
                         onChange={(e) => {
-                            setFee(parseFloat(e.target.value))
+                            setFee(parseFloat(e.target.value) || '')
                         }}
                         size="small"
                         label="Fees"
@@ -84,7 +85,7 @@ export default function Wise({ state, setState }: { state: ReducerProps; setStat
                     {/* Exchange rate */}
                     <TextField
                         onChange={(e) => {
-                            setExchangeRate(parseFloat(e.target.value))
+                            setExchangeRate(parseFloat(e.target.value) || '')
                         }}
                         size="small"
                         label="Exchange rate"
