@@ -31,11 +31,12 @@ export default function Wise({ state, setState }: { state: ReducerProps; setStat
     useEffect(() => {
         // If missing any of the below, clear the state calculated with those values
         if (!usdSent || !fee || !exchangeRate) {
-            setState({ exRateAfterFees: '', tryReceived: '' })
+            setState({ ...state, exRateAfterFees: '', tryReceived: '' })
         }
 
         if (usdSent && fee && exchangeRate) {
             setState({
+                ...state,
                 exRateAfterFees: exchangeRateAfterFeeCut(exchangeRate, fee, usdSent), //
                 tryReceived: tryReceivedFn(exchangeRate, fee, usdSent),
             })
@@ -57,7 +58,7 @@ export default function Wise({ state, setState }: { state: ReducerProps; setStat
                     {/* Amount being sent */}
                     <TextField
                         onChange={(e) => {
-                            setState({ usdSent: parseFloat(e.target.value) || '' })
+                            setState({ ...state, usdSent: parseFloat(e.target.value) || '' })
                         }}
                         size="small"
                         label="Amount being sent"
@@ -97,25 +98,19 @@ export default function Wise({ state, setState }: { state: ReducerProps; setStat
                 {/* Fees in percentage */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', height: 24 }}>
                     <Typography variant="body2">Fees in percentage</Typography>
-                    {feesInPercentage ? ( //
-                        <Typography variant="number">% {feesInPercentage}</Typography>
-                    ) : null}
+                    <Typography variant="number"> {feesInPercentage && `%${feesInPercentage}`}</Typography>
                 </Box>
 
                 {/* Exchange rate after fees applied */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', height: 24 }}>
                     <Typography variant="body2">Exchange rate after fees applied</Typography>
-                    {typeof exRateAfterFees === 'number' ? ( //
-                        <Typography variant="number">{exRateAfterFees.toFixed(4)}</Typography>
-                    ) : null}
+                    <Typography variant="number">{exRateAfterFees && exRateAfterFees.toFixed(4)}</Typography>
                 </Box>
 
                 {/* Amount to be received */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', height: 24 }}>
                     <Typography variant="body2">Amount to be received </Typography>
-                    {typeof tryReceived === 'number' ? ( //
-                        <Typography variant="number">{tryReceived.toFixed(2)} TRY</Typography>
-                    ) : null}
+                    <Typography variant="number">{tryReceived && `${tryReceived.toFixed(2)}TRY`}</Typography>
                 </Box>
             </CardContent>
         </Card>

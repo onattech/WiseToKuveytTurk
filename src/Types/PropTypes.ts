@@ -1,7 +1,7 @@
 export type ReducerProps = {
-    tryReceived?: number | ''
-    usdSent?: number | ''
-    exRateAfterFees?: number | ''
+    tryReceived: number | ''
+    usdSent: number | ''
+    exRateAfterFees: number | ''
 }
 
 export type StreamType = {

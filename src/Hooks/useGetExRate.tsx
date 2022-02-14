@@ -12,13 +12,11 @@ export default function useGetExRate() {
     useEffect(() => {
         const interval = setInterval(() => {
             fetch('https://go-proxy-kuveyt.herokuapp.com/')
-                // fetch('http://localho.st:40741/')
                 .then((result) => result.json())
                 .then((content) => {
                     setLive(true)
                     setCurrentExRate(content)
                     console.log(content)
-                    // console.log('🚀 ~ file: useGetExRate.tsx ~ line 37 ~ useGetExRate ~ currentExRate', extractUSD(content))
                 })
                 .catch((err) => {
                     setLive(false)
@@ -30,16 +28,4 @@ export default function useGetExRate() {
     }, [])
 
     return { currentExRate, isLive }
-}
-
-// Utility function
-function extractUSD(text: string) {
-    const idx = text.indexOf('USD (Amerikan Doları)')
-    const section = text.substring(idx, idx + 800)
-    const rate = section.match(/\d\d,\d\d\d\d/g)
-    if (rate) {
-        const rateClean = rate.map((a) => Number(a.replace(',', '.')).toFixed(4))
-        return { buy: rateClean[0], sell: rateClean[1] }
-    }
-    return { buy: '', sell: '' }
 }

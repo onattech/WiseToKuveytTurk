@@ -13,7 +13,6 @@ function reducer(currentState: ReducerProps, newState: ReducerProps): ReducerPro
 
 function App() {
     const [state, setState] = useReducer(reducer, initialState)
-    console.log('🚀 ~ file: App.tsx ~ line 15 ~ App ~ state', state)
 
     return (
         <Grid container spacing={2} direction="column" alignContent="center">
