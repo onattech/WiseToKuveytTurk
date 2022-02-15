@@ -72,7 +72,7 @@ export default function Kuveyt({ state }: { state: ReducerProps }) {
                     {/* Exchange rate to break even */}
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <Typography variant="body2">Exchange rate to break even</Typography>
-                        <Typography variant="number">{(wiseExRateAfterFees * kuveytFee).toFixed(4) && ''}</Typography>
+                        <Typography variant="number">{wiseExRateAfterFees ? (wiseExRateAfterFees * kuveytFee).toFixed(4) : ''}</Typography>
                     </Box>
 
                     {/* Exchange rate difference */}
