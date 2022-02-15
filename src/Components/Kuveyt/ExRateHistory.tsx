@@ -7,32 +7,32 @@ import { StreamType, CurrentExRateType } from '../../Types/PropTypes'
 
 const GREEN = '#65CA75'
 
-export default function ExRateStream({ stream, currentExRate }: { stream: StreamType; currentExRate: CurrentExRateType }) {
+export default function ExRateHistory({ stream, kuveytExRateUSD }: { stream: StreamType; kuveytExRateUSD: CurrentExRateType }) {
     return (
         <Box display="flex" gap="8px" justifyContent="flex-end" pt={1} ml="auto">
-            <ExRateBox stream={stream} currentExRate={currentExRate} minutes={60} />
-            <ExRateBox stream={stream} currentExRate={currentExRate} minutes={30} />
-            <ExRateBox stream={stream} currentExRate={currentExRate} minutes={10} />
-            <ExRateBox stream={stream} currentExRate={currentExRate} minutes={5} />
-            <ExRateBox stream={stream} currentExRate={currentExRate} minutes={1} />
+            <ExRateBox stream={stream} kuveytExRateUSD={kuveytExRateUSD} minutes={60} />
+            <ExRateBox stream={stream} kuveytExRateUSD={kuveytExRateUSD} minutes={30} />
+            <ExRateBox stream={stream} kuveytExRateUSD={kuveytExRateUSD} minutes={10} />
+            <ExRateBox stream={stream} kuveytExRateUSD={kuveytExRateUSD} minutes={5} />
+            <ExRateBox stream={stream} kuveytExRateUSD={kuveytExRateUSD} minutes={1} />
         </Box>
     )
 }
 
-function ExRateBox({ stream, currentExRate, minutes }: { stream: StreamType; currentExRate: CurrentExRateType; minutes: number }) {
+function ExRateBox({ stream, kuveytExRateUSD, minutes }: { stream: StreamType; kuveytExRateUSD: CurrentExRateType; minutes: number }) {
     const [updateStatus, setUpdateStatus] = useState('same')
 
     useEffect(() => {
         if (stream.length < minutes * 12 + 1) return
 
-        if (currentExRate.sell > stream.slice(-12 * minutes - 1)[0].sell) {
+        if (kuveytExRateUSD.sell > stream.slice(-12 * minutes - 1)[0].sell) {
             setUpdateStatus('increased')
-        } else if (currentExRate.sell < stream.slice(-12 * minutes - 1)[0].sell) {
+        } else if (kuveytExRateUSD.sell < stream.slice(-12 * minutes - 1)[0].sell) {
             setUpdateStatus('decreased')
         } else {
             setUpdateStatus('same')
         }
-    }, [currentExRate, minutes, stream])
+    }, [kuveytExRateUSD, minutes, stream])
 
     if (stream.length < minutes * 12 + 1) return null
     return (

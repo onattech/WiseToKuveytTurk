@@ -5,20 +5,21 @@ import Box from '@mui/material/Box'
 import Typography from '../../MUI/CustomTypography'
 import Kv from '../../Assets/kuveyt-turk.png'
 import useGetExRate from '../../Hooks/useGetExRate'
-import ExRateStream from './ExRateStream'
+import ExRateHistory from './ExRateHistory'
 import LiveExRateDisplay from './LiveExRateDisplay'
 import { ReducerProps, StreamType } from '../../Types/PropTypes'
 
 const ching = require('../../Assets/ching.mp3')
 
+const GREEN = '#2ead4b'
 const kuveytFee = 0.998
 
 export default function Kuveyt({ state }: { state: ReducerProps }) {
     // Custom hook
-    const { currentExRate, isLive } = useGetExRate()
+    const { kuveytExRateUSD, kuveytIsLive } = useGetExRate()
 
     // Global state
-    const { usdSent, exRateAfterFees, tryReceived } = state
+    const { wiseUSDsent, wiseExRateAfterFees, wiseTRYsent } = state
 
     // Local state
     const [stream, setStream] = useState<StreamType>([])
@@ -26,7 +27,6 @@ export default function Kuveyt({ state }: { state: ReducerProps }) {
     const [count, setCount] = useState(1)
     if (process.env.NODE_ENV === 'development') {
         console.log('🚀updating....')
-        console.log('🚀 ~ file: Kuveyt.jsx ~ line 19 ~ Kuveyt ~ streamobj', stream)
     }
 
     // const audio = new Audio(ching)
@@ -34,19 +34,19 @@ export default function Kuveyt({ state }: { state: ReducerProps }) {
 
     // Update exchange rates every 5 seconds
     useEffect(() => {
-        if (currentExRate.sell === 0) return
-        setStream([...stream, { buy: currentExRate.buy, sell: currentExRate.sell, date: new Date().toISOString(), count }])
+        if (kuveytExRateUSD.sell === 0) return
+        setStream([...stream, { buy: kuveytExRateUSD.buy, sell: kuveytExRateUSD.sell, date: new Date().toISOString(), count }])
         setCount(count + 1)
 
         if (stream.length < 3) return
-        if (currentExRate.sell > stream.slice(-2)[0].sell) {
+        if (kuveytExRateUSD.sell > stream.slice(-2)[0].sell) {
             setLastUpdateStatus('increased')
-        } else if (currentExRate.sell < stream.slice(-2)[0].sell) {
+        } else if (kuveytExRateUSD.sell < stream.slice(-2)[0].sell) {
             setLastUpdateStatus('decreased')
         } else {
             setLastUpdateStatus('same')
         }
-    }, [currentExRate])
+    }, [kuveytExRateUSD])
 
     return (
         <>
@@ -60,41 +60,41 @@ export default function Kuveyt({ state }: { state: ReducerProps }) {
                     {/* Exchange rate history */}
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
                         <Typography variant="body2">Exchange rate history</Typography>
-                        <ExRateStream stream={stream} currentExRate={currentExRate} />
+                        <ExRateHistory stream={stream} kuveytExRateUSD={kuveytExRateUSD} />
                     </Box>
 
                     {/* Current USD/TRY exchange rate */}
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <Typography variant="body2">Current USD/TRY exchange rate</Typography>
-                        <LiveExRateDisplay isLive={isLive} currentExRate={currentExRate.sell} lastUpdateStatus={lastUpdateStatus} />
+                        <LiveExRateDisplay kuveytIsLive={kuveytIsLive} kuveytExRateUSD={kuveytExRateUSD.sell} lastUpdateStatus={lastUpdateStatus} />
                     </Box>
 
                     {/* Exchange rate to break even */}
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <Typography variant="body2">Exchange rate to break even</Typography>
-                        <Typography variant="number">{(exRateAfterFees * kuveytFee).toFixed(4)}</Typography>
+                        <Typography variant="number">{(wiseExRateAfterFees * kuveytFee).toFixed(4) && ''}</Typography>
                     </Box>
 
                     {/* Exchange rate difference */}
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <Typography variant="body2">Exchange rate difference</Typography>
-                        <Typography variant="number" color={getExRateDiff(currentExRate.sell, exRateAfterFees) > 0 ? '#2ead4b' : 'red'}>
-                            {Math.abs(getExRateDiff(currentExRate.sell, exRateAfterFees)).toFixed(2)}
+                        <Typography variant="number" color={getExRateDiff(kuveytExRateUSD.sell, wiseExRateAfterFees) > 0 ? GREEN : 'red'}>
+                            {wiseExRateAfterFees !== 0 ? Math.abs(getExRateDiff(kuveytExRateUSD.sell, wiseExRateAfterFees)).toFixed(2) : ''}
                         </Typography>
                     </Box>
 
-                    {/* USD at current exchange rate */}
+                    {/* USD to be recieved at current  rate */}
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Typography variant="body2">USD at current exchange rate</Typography>
-                        <Typography variant="number">{((tryReceived / currentExRate.sell) * kuveytFee).toFixed(2)} USD</Typography>
+                        <Typography variant="body2">USD to be recieved at current rate</Typography>
+                        <Typography variant="number">{wiseTRYsent !== 0 ? `${((wiseTRYsent / kuveytExRateUSD.sell) * kuveytFee).toFixed(2)} USD` : ''}</Typography>
                     </Box>
 
                     {/* Gain */}
-                    {tryReceived && usdSent ? (
+                    {wiseTRYsent && wiseUSDsent ? (
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Typography variant="body2">{getGain(tryReceived, currentExRate, usdSent) > 0 ? 'Gain' : 'Loss'}</Typography>
-                            <Typography variant="number" color={getGain(tryReceived, currentExRate, usdSent) > 0 ? '#2ead4b' : 'red'}>
-                                {Math.abs(getGain(tryReceived, currentExRate, usdSent)).toFixed(2)} USD
+                            <Typography variant="body2">{getGain(wiseTRYsent, kuveytExRateUSD, wiseUSDsent) > 0 ? 'Gain' : 'Loss'}</Typography>
+                            <Typography variant="number" color={getGain(wiseTRYsent, kuveytExRateUSD, wiseUSDsent) > 0 ? GREEN : 'red'}>
+                                {Math.abs(getGain(wiseTRYsent, kuveytExRateUSD, wiseUSDsent)).toFixed(2)} USD
                             </Typography>
                         </Box>
                     ) : null}
@@ -103,15 +103,11 @@ export default function Kuveyt({ state }: { state: ReducerProps }) {
 
             {process.env.NODE_ENV === 'development' ? (
                 <Box>
-                    {/* <p>One minute ago</p> */}
                     <p>DEBUG</p>
-                    {/* <div>Time difference: {(new Date(stream.at(-13)[2]) - new Date()) / 1000}</div> */}
-                    {/* <div>Sale rate: {stream.at(-13)[1]}</div> */}
-                    {/* <span>{stream.at(-13)[1] < stream.at(-1)[1] ? 'increased' : 'decreased'}</span> */}
                     <p></p>
                     <Box>
                         {stream.map((a) => (
-                            <div>
+                            <div key={a.count}>
                                 <span style={{ marginRight: 10 }}>{a.buy}</span>
                                 <span style={{ marginRight: 10 }}>{a.sell}</span>
                                 <span style={{ marginRight: 10 }}>{new Date(a.date).toLocaleTimeString()}</span>
@@ -125,7 +121,6 @@ export default function Kuveyt({ state }: { state: ReducerProps }) {
     )
 
     function getExRateDiff(currentRate: number, rateAfterFees: number): number {
-        console.log((Number(currentRate) - Number(rateAfterFees) * kuveytFee) * -1)
         return (currentRate - rateAfterFees * kuveytFee) * -1
     }
 

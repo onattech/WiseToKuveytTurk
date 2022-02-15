@@ -1,7 +1,7 @@
 export type ReducerProps = {
-    tryReceived: number
-    usdSent: number
-    exRateAfterFees: number
+    wiseTRYsent: number
+    wiseUSDsent: number
+    wiseExRateAfterFees: number
 }
 
 export type StreamType = {

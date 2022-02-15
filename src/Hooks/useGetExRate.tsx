@@ -6,8 +6,8 @@ type exRateType = {
 }
 
 export default function useGetExRate() {
-    const [currentExRate, setCurrentExRate] = useState<exRateType>({ buy: 0, sell: 0 })
-    const [isLive, setLive] = useState(false)
+    const [kuveytExRateUSD, setCurrentExRate] = useState<exRateType>({ buy: 0, sell: 0 })
+    const [kuveytIsLive, setLive] = useState(false)
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -27,5 +27,5 @@ export default function useGetExRate() {
         return () => clearInterval(interval)
     }, [])
 
-    return { currentExRate, isLive }
+    return { kuveytExRateUSD, kuveytIsLive }
 }

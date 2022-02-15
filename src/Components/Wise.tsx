@@ -11,37 +11,37 @@ import { ReducerProps } from '../Types/PropTypes'
 
 export default function Wise({ state, setState }: { state: ReducerProps; setState: React.Dispatch<ReducerProps> }) {
     // Global state
-    const { usdSent, exRateAfterFees, tryReceived } = state
+    const { wiseUSDsent, wiseExRateAfterFees, wiseTRYsent } = state
 
     // Local state
-    const [fee, setFee] = useState<number>(0)
+    const [wiseFees, setWiseFees] = useState<number>(0)
     const [exchangeRate, setExchangeRate] = useState<number>(0)
-    const [feesInPercentage, setFeesInPercentage] = useState<string | null>(null)
+    const [wiseFeesInPercentage, setWiseFeesInPercentage] = useState<string | null>(null)
 
     // Set fees in percentage
     useEffect(() => {
-        if (usdSent && fee) {
-            setFeesInPercentage(((fee / usdSent) * 100).toFixed(2))
+        if (wiseUSDsent && wiseFees) {
+            setWiseFeesInPercentage(((wiseFees / wiseUSDsent) * 100).toFixed(2))
         } else {
-            setFeesInPercentage(null)
+            setWiseFeesInPercentage(null)
         }
-    }, [usdSent, fee])
+    }, [wiseUSDsent, wiseFees])
 
     // Set exchange rate after fees applied and TRY to be recieved
     useEffect(() => {
         // If missing any of the below, clear the state calculated with those values
-        if (!usdSent || !fee || !exchangeRate) {
-            setState({ ...state, exRateAfterFees: 0, tryReceived: 0 })
+        if (!wiseUSDsent || !wiseFees || !exchangeRate) {
+            setState({ ...state, wiseExRateAfterFees: 0, wiseTRYsent: 0 })
         }
 
-        if (usdSent && fee && exchangeRate) {
+        if (wiseUSDsent && wiseFees && exchangeRate) {
             setState({
                 ...state,
-                exRateAfterFees: exchangeRateAfterFeeCut(exchangeRate, fee, usdSent), //
-                tryReceived: tryReceivedFn(exchangeRate, fee, usdSent),
+                wiseExRateAfterFees: exchangeRateAfterFeeCut(exchangeRate, wiseFees, wiseUSDsent), //
+                wiseTRYsent: tryReceivedFn(exchangeRate, wiseFees, wiseUSDsent),
             })
         }
-    }, [usdSent, fee, exchangeRate])
+    }, [wiseUSDsent, wiseFees, exchangeRate])
 
     // Alert
     // useEffect(() => {
@@ -58,28 +58,28 @@ export default function Wise({ state, setState }: { state: ReducerProps; setStat
                     {/* Amount being sent */}
                     <TextField
                         onChange={(e) => {
-                            setState({ ...state, usdSent: parseFloat(e.target.value) || 0 })
+                            setState({ ...state, wiseUSDsent: parseFloat(e.target.value) || 0 })
                         }}
                         size="small"
                         label="Amount being sent"
                         variant="outlined"
                         sx={{ width: 170 }}
                         InputProps={{
-                            startAdornment: true && <InputAdornment position="start">$</InputAdornment>,
+                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
                         }}
                     />
 
                     {/* Fees */}
                     <TextField
                         onChange={(e) => {
-                            setFee(parseFloat(e.target.value) || 0)
+                            setWiseFees(parseFloat(e.target.value) || 0)
                         }}
                         size="small"
                         label="Fees"
                         variant="outlined"
                         sx={{ width: 100 }}
                         InputProps={{
-                            startAdornment: true && <InputAdornment position="start">$</InputAdornment>,
+                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
                         }}
                     />
 
@@ -98,19 +98,19 @@ export default function Wise({ state, setState }: { state: ReducerProps; setStat
                 {/* Fees in percentage */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', height: 24 }}>
                     <Typography variant="body2">Fees in percentage</Typography>
-                    <Typography variant="number"> {feesInPercentage && `%${feesInPercentage}`}</Typography>
+                    <Typography variant="number"> {wiseFeesInPercentage ? `%${wiseFeesInPercentage}` : null}</Typography>
                 </Box>
 
                 {/* Exchange rate after fees applied */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', height: 24 }}>
                     <Typography variant="body2">Exchange rate after fees applied</Typography>
-                    <Typography variant="number">{exRateAfterFees && exRateAfterFees.toFixed(4)}</Typography>
+                    <Typography variant="number">{wiseExRateAfterFees !== 0 ? wiseExRateAfterFees.toFixed(4) : null}</Typography>
                 </Box>
 
                 {/* Amount to be received */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', height: 24 }}>
                     <Typography variant="body2">Amount to be received </Typography>
-                    <Typography variant="number">{tryReceived && `${tryReceived.toFixed(2)} TRY`}</Typography>
+                    <Typography variant="number">{wiseTRYsent !== 0 ? `${wiseTRYsent.toFixed(2)} TRY` : null}</Typography>
                 </Box>
             </CardContent>
         </Card>
