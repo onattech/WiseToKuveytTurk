@@ -1,11 +1,11 @@
 import * as React from 'react'
-import Button from '@material-ui/core/Button'
-import TextField from '@material-ui/core/TextField'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogContentText from '@material-ui/core/DialogContentText'
-import DialogTitle from '@material-ui/core/DialogTitle'
+import Button from '@mui/material/Button'
+import TextField from '@mui/material/TextField'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogContentText from '@mui/material/DialogContentText'
+import DialogTitle from '@mui/material/DialogTitle'
 
 const ching = require('../../Assets/ching.mp3')
 
@@ -45,7 +45,7 @@ export default function FormDialog({ open, setOpen, sell }: { open: boolean; set
 
     return (
         <div>
-            <Dialog open={open} onClose={() => setOpen(false)} aria-labelledby="form-dialog-title">
+            <Dialog open={open} onClose={() => setOpen(false)}>
                 <DialogTitle id="notification-title">Notification</DialogTitle>
                 <DialogContent>
                     <DialogContentText>Set the USD/TRY buy exchange rate you would like to get notified at.</DialogContentText>
@@ -56,9 +56,9 @@ export default function FormDialog({ open, setOpen, sell }: { open: boolean; set
                         defaultValue={notifyRate !== 0 ? notifyRate.toFixed(4) : ''}
                         variant="outlined"
                         margin="dense"
-                        id="exrate"
-                        label="Exchange rate"
-                        type="text"
+                        id="name"
+                        size="small"
+                        label={'Nofity exchange rate'}
                     />
                 </DialogContent>
                 <DialogActions>

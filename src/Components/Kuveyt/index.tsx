@@ -57,6 +57,7 @@ export default function Kuveyt({ state }: { state: ReducerProps }) {
     return (
         <>
             {process.env.NODE_ENV === 'development' ? <h1>Environment {process.env.NODE_ENV}</h1> : null}
+
             <Card sx={{ width: 500 }}>
                 <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                     <Box display="flex" alignItems="center" justifyContent="space-between">
@@ -65,7 +66,9 @@ export default function Kuveyt({ state }: { state: ReducerProps }) {
                             <AlarmIcon color="action" />
                         </Button>
                     </Box>
+
                     <Dialog open={open} setOpen={setOpen} sell={kuveytExRateUSD.sell} />
+
                     {/* Exchange rate history */}
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
                         <Typography variant="body2">Exchange rate history</Typography>
