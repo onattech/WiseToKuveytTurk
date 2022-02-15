@@ -66,7 +66,7 @@ export default function Kuveyt({ state }: { state: ReducerProps }) {
                     {/* Current USD/TRY exchange rate */}
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <Typography variant="body2">Current USD/TRY exchange rate</Typography>
-                        <LiveExRateDisplay kuveytIsLive={kuveytIsLive} kuveytExRateUSD={kuveytExRateUSD.sell} lastUpdateStatus={lastUpdateStatus} />
+                        {kuveytIsLive ? <LiveExRateDisplay kuveytIsLive={kuveytIsLive} kuveytExRateUSD={kuveytExRateUSD.sell} lastUpdateStatus={lastUpdateStatus} /> : 'loading...'}
                     </Box>
 
                     {/* Exchange rate to break even */}
