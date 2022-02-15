@@ -77,7 +77,7 @@ export default function Kuveyt({ state }: { state: ReducerProps }) {
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <Typography variant="body2">Exchange rate difference</Typography>
                         <Typography variant="number" color={getExRateDiff(currentExRate.sell, exRateAfterFees) > 0 ? '#2ead4b' : 'red'}>
-                            {Math.abs(getExRateDiff(currentExRate.sell, exRateAfterFees)).toFixed(2)}
+                            {getExRateDiff(currentExRate.sell, exRateAfterFees) > 0 && Math.abs(getExRateDiff(currentExRate.sell, exRateAfterFees)).toFixed(2)}
                         </Typography>
                     </Box>
 
@@ -123,7 +123,12 @@ export default function Kuveyt({ state }: { state: ReducerProps }) {
     )
 
     function getExRateDiff(currentRate: number | '', rateAfterFees: number | ''): number {
+        if (currentRate === '' || rateAfterFees === '') {
+            return 0
+        }
         return (Number(currentRate) - Number(rateAfterFees) * 0.998) * -1
+
+        console.log((Number(currentRate) - Number(rateAfterFees) * 0.998) * -1)
     }
 
     function getGain(amountReceivedTr: number, currentRate: { buy: number | ''; sell: number | '' }, dollarSent: number): number {
