@@ -60,9 +60,7 @@ function ExRateBox({ stream, currentExRate, minutes }: { stream: StreamType; cur
             </Typography>
 
             {/* Exchange rate at the provided minute mark */}
-            <Typography>{stream.slice(-12 * minutes - 1)[0].sell}</Typography>
-
-            {/* <Typography>{new Date(stream?.at(-12 * minutes - 1)![2]).toLocaleTimeString()}</Typography> */}
+            <Typography>{stream.slice(-12 * minutes - 1)[0].sell.toFixed(4)}</Typography>
         </Paper>
     )
 }
@@ -73,7 +71,5 @@ function ExRateBox({ stream, currentExRate, minutes }: { stream: StreamType; cur
  * ==> 0.12
  */
 function rateDiff(stream: StreamType, minutes: number) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     return Math.abs(stream.slice(-12 * minutes - 1)[0].sell - stream.slice(-1)[0].sell).toFixed(2)
 }

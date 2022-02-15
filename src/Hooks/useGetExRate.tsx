@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 
 type exRateType = {
-    buy: number | ''
-    sell: number | ''
+    buy: number
+    sell: number
 }
 
 export default function useGetExRate() {
-    const [currentExRate, setCurrentExRate] = useState<exRateType>({ buy: '', sell: '' })
+    const [currentExRate, setCurrentExRate] = useState<exRateType>({ buy: 0, sell: 0 })
     const [isLive, setLive] = useState(false)
 
     useEffect(() => {

@@ -5,7 +5,7 @@ import Wise from './Components/Wise'
 import { ReducerProps } from './Types/PropTypes'
 import Kuveyt from './Components/Kuveyt'
 
-const initialState: ReducerProps = { tryReceived: '', usdSent: '', exRateAfterFees: '' }
+const initialState: ReducerProps = { tryReceived: 0, usdSent: 0, exRateAfterFees: 0 }
 
 function reducer(currentState: ReducerProps, newState: ReducerProps): ReducerProps {
     return { ...currentState, ...newState }

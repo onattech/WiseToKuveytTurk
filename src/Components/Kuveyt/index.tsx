@@ -11,6 +11,8 @@ import { ReducerProps, StreamType } from '../../Types/PropTypes'
 
 const ching = require('../../Assets/ching.mp3')
 
+const kuveytFee = 0.998
+
 export default function Kuveyt({ state }: { state: ReducerProps }) {
     // Custom hook
     const { currentExRate, isLive } = useGetExRate()
@@ -32,14 +34,14 @@ export default function Kuveyt({ state }: { state: ReducerProps }) {
 
     // Update exchange rates every 5 seconds
     useEffect(() => {
-        if (currentExRate.sell === '') return
+        if (currentExRate.sell === 0) return
         setStream([...stream, { buy: currentExRate.buy, sell: currentExRate.sell, date: new Date().toISOString(), count }])
         setCount(count + 1)
 
         if (stream.length < 3) return
-        if (currentExRate.sell > stream.splice(-2)[0].sell) {
+        if (currentExRate.sell > stream.slice(-2)[0].sell) {
             setLastUpdateStatus('increased')
-        } else if (currentExRate.sell < stream.splice(-2)[0].sell) {
+        } else if (currentExRate.sell < stream.slice(-2)[0].sell) {
             setLastUpdateStatus('decreased')
         } else {
             setLastUpdateStatus('same')
@@ -70,21 +72,21 @@ export default function Kuveyt({ state }: { state: ReducerProps }) {
                     {/* Exchange rate to break even */}
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <Typography variant="body2">Exchange rate to break even</Typography>
-                        <Typography variant="number">{exRateAfterFees && (exRateAfterFees * 0.998).toFixed(4)}</Typography>
+                        <Typography variant="number">{(exRateAfterFees * kuveytFee).toFixed(4)}</Typography>
                     </Box>
 
                     {/* Exchange rate difference */}
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <Typography variant="body2">Exchange rate difference</Typography>
                         <Typography variant="number" color={getExRateDiff(currentExRate.sell, exRateAfterFees) > 0 ? '#2ead4b' : 'red'}>
-                            {Math.abs(getExRateDiff(currentExRate.sell, exRateAfterFees)) > 0 && Math.abs(getExRateDiff(currentExRate.sell, exRateAfterFees)).toFixed(2)}
+                            {Math.abs(getExRateDiff(currentExRate.sell, exRateAfterFees)).toFixed(2)}
                         </Typography>
                     </Box>
 
                     {/* USD at current exchange rate */}
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <Typography variant="body2">USD at current exchange rate</Typography>
-                        {typeof tryReceived === 'number' ? <Typography variant="number">{((tryReceived / Number(currentExRate.sell)) * 0.998).toFixed(2)} USD</Typography> : null}
+                        <Typography variant="number">{((tryReceived / currentExRate.sell) * kuveytFee).toFixed(2)} USD</Typography>
                     </Box>
 
                     {/* Gain */}
@@ -122,15 +124,12 @@ export default function Kuveyt({ state }: { state: ReducerProps }) {
         </>
     )
 
-    function getExRateDiff(currentRate: number | '', rateAfterFees: number | ''): number {
-        console.log((Number(currentRate) - Number(rateAfterFees) * 0.998) * -1)
-        if (currentRate === '' || rateAfterFees === '') {
-            return 0
-        }
-        return (Number(currentRate) - Number(rateAfterFees) * 0.998) * -1
+    function getExRateDiff(currentRate: number, rateAfterFees: number): number {
+        console.log((Number(currentRate) - Number(rateAfterFees) * kuveytFee) * -1)
+        return (currentRate - rateAfterFees * kuveytFee) * -1
     }
 
-    function getGain(amountReceivedTr: number, currentRate: { buy: number | ''; sell: number | '' }, dollarSent: number): number {
-        return (amountReceivedTr / Number(currentRate.sell)) * 0.998 - dollarSent
+    function getGain(amountReceivedTr: number, currentRate: { buy: number; sell: number }, dollarSent: number): number {
+        return (amountReceivedTr / currentRate.sell) * kuveytFee - dollarSent
     }
 }

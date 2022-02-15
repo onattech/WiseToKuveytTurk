@@ -14,8 +14,8 @@ export default function Wise({ state, setState }: { state: ReducerProps; setStat
     const { usdSent, exRateAfterFees, tryReceived } = state
 
     // Local state
-    const [fee, setFee] = useState<number | ''>('')
-    const [exchangeRate, setExchangeRate] = useState<number | ''>('')
+    const [fee, setFee] = useState<number>(0)
+    const [exchangeRate, setExchangeRate] = useState<number>(0)
     const [feesInPercentage, setFeesInPercentage] = useState<string | null>(null)
 
     // Set fees in percentage
@@ -31,7 +31,7 @@ export default function Wise({ state, setState }: { state: ReducerProps; setStat
     useEffect(() => {
         // If missing any of the below, clear the state calculated with those values
         if (!usdSent || !fee || !exchangeRate) {
-            setState({ ...state, exRateAfterFees: '', tryReceived: '' })
+            setState({ ...state, exRateAfterFees: 0, tryReceived: 0 })
         }
 
         if (usdSent && fee && exchangeRate) {
@@ -58,7 +58,7 @@ export default function Wise({ state, setState }: { state: ReducerProps; setStat
                     {/* Amount being sent */}
                     <TextField
                         onChange={(e) => {
-                            setState({ ...state, usdSent: parseFloat(e.target.value) || '' })
+                            setState({ ...state, usdSent: parseFloat(e.target.value) || 0 })
                         }}
                         size="small"
                         label="Amount being sent"
@@ -72,7 +72,7 @@ export default function Wise({ state, setState }: { state: ReducerProps; setStat
                     {/* Fees */}
                     <TextField
                         onChange={(e) => {
-                            setFee(parseFloat(e.target.value) || '')
+                            setFee(parseFloat(e.target.value) || 0)
                         }}
                         size="small"
                         label="Fees"
@@ -86,7 +86,7 @@ export default function Wise({ state, setState }: { state: ReducerProps; setStat
                     {/* Exchange rate */}
                     <TextField
                         onChange={(e) => {
-                            setExchangeRate(parseFloat(e.target.value) || '')
+                            setExchangeRate(parseFloat(e.target.value) || 0)
                         }}
                         size="small"
                         label="Exchange rate"
@@ -110,7 +110,7 @@ export default function Wise({ state, setState }: { state: ReducerProps; setStat
                 {/* Amount to be received */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', height: 24 }}>
                     <Typography variant="body2">Amount to be received </Typography>
-                    <Typography variant="number">{tryReceived && `${tryReceived.toFixed(2)}TRY`}</Typography>
+                    <Typography variant="number">{tryReceived && `${tryReceived.toFixed(2)} TRY`}</Typography>
                 </Box>
             </CardContent>
         </Card>
