@@ -25,9 +25,9 @@ function ExRateBox({ stream, currentExRate, minutes }: { stream: StreamType; cur
     useEffect(() => {
         if (stream.length < minutes * 12 + 1) return
 
-        if (currentExRate.sell > stream?.at(-12 * minutes - 1)!.sell) {
+        if (currentExRate.sell > stream.slice(-12 * minutes - 1)[0].sell) {
             setUpdateStatus('increased')
-        } else if (currentExRate.sell < stream?.at(-12 * minutes - 1)!.sell) {
+        } else if (currentExRate.sell < stream.slice(-12 * minutes - 1)[0].sell) {
             setUpdateStatus('decreased')
         } else {
             setUpdateStatus('same')
@@ -60,10 +60,7 @@ function ExRateBox({ stream, currentExRate, minutes }: { stream: StreamType; cur
             </Typography>
 
             {/* Exchange rate at the provided minute mark */}
-            <Typography>
-                {stream?.at(-12 * minutes - 1)!.sell}
-                {/* {` ${stream?.at(-12 * minutes - 1)![3]}`} */}
-            </Typography>
+            <Typography>{stream.slice(-12 * minutes - 1)[0].sell}</Typography>
 
             {/* <Typography>{new Date(stream?.at(-12 * minutes - 1)![2]).toLocaleTimeString()}</Typography> */}
         </Paper>
@@ -78,6 +75,5 @@ function ExRateBox({ stream, currentExRate, minutes }: { stream: StreamType; cur
 function rateDiff(stream: StreamType, minutes: number) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    // eslint-disable-next-line no-unsafe-optional-chaining
-    return Math.abs(stream?.at(-12 * minutes - 1)!.sell - stream?.at(-1)!.sell).toFixed(2)
+    return Math.abs(stream.slice(-12 * minutes - 1)[0].sell - stream.slice(-1)[0].sell).toFixed(2)
 }
