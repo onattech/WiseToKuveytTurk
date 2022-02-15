@@ -2,12 +2,15 @@ import { useEffect, useState } from 'react'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Box from '@mui/material/Box'
+import AlarmIcon from '@material-ui/icons/Alarm'
+import { Button } from '@mui/material'
 import Typography from '../../MUI/CustomTypography'
 import Kv from '../../Assets/kuveyt-turk.png'
 import useGetExRate from '../../Hooks/useGetExRate'
 import ExRateHistory from './ExRateHistory'
 import LiveExRateDisplay from './LiveExRateDisplay'
 import { ReducerProps, StreamType } from '../../Types/PropTypes'
+import Dialog from './Dialog'
 
 const ching = require('../../Assets/ching.mp3')
 
@@ -20,6 +23,9 @@ export default function Kuveyt({ state }: { state: ReducerProps }) {
 
     // Global state
     const { wiseUSDsent, wiseExRateAfterFees, wiseTRYsent } = state
+
+    // Dialog state
+    const [open, setOpen] = useState(false)
 
     // Local state
     const [stream, setStream] = useState<StreamType>([])
@@ -38,7 +44,7 @@ export default function Kuveyt({ state }: { state: ReducerProps }) {
         setStream([...stream, { buy: kuveytExRateUSD.buy, sell: kuveytExRateUSD.sell, date: new Date().toISOString(), count }])
         setCount(count + 1)
 
-        if (stream.length < 3) return
+        if (stream.length < 2) return
         if (kuveytExRateUSD.sell > stream.slice(-2)[0].sell) {
             setLastUpdateStatus('increased')
         } else if (kuveytExRateUSD.sell < stream.slice(-2)[0].sell) {
@@ -55,8 +61,11 @@ export default function Kuveyt({ state }: { state: ReducerProps }) {
                 <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                     <Box display="flex" alignItems="center" justifyContent="space-between">
                         <img alt="KuveytTurk" src={Kv} style={{ width: 125 }} />
+                        <Button onClick={() => setOpen(true)} style={{ minWidth: 'auto' }}>
+                            <AlarmIcon color="action" />
+                        </Button>
                     </Box>
-
+                    <Dialog open={open} setOpen={setOpen} sell={kuveytExRateUSD.sell} />
                     {/* Exchange rate history */}
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
                         <Typography variant="body2">Exchange rate history</Typography>
