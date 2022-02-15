@@ -38,7 +38,7 @@ function ExRateBox({ stream, kuveytExRateUSD, minutes }: { stream: StreamType; k
     return (
         <Paper variant="outlined" sx={{ padding: '4px', position: 'relative' }}>
             {/* Minute header */}
-            <Typography sx={{ position: 'absolute', background: 'white', top: -12, px: '3px', left: -6, color: 'slategray', lineHeight: 1, fontWeight: 'bold' }}>
+            <Typography sx={{ position: 'absolute', background: 'white', top: -9, px: '3px', left: -6, color: 'slategray', lineHeight: 1, fontWeight: 'bold' }}>
                 {minutes}m
             </Typography>
 
