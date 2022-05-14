@@ -15,7 +15,7 @@ export default function useGetExRate() {
                 .then((result) => result.json())
                 .then((content) => {
                     setLive(true)
-                    setCurrentExRate(content)
+                    setCurrentExRate(content.USD)
                     console.log(content)
                 })
                 .catch((err) => {
