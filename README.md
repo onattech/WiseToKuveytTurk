@@ -1,2 +1,2 @@
 # WiseToKuveytTurk
-Calculates required conversion rate to convert TRY back to USD and break even on fees.
+Calculates the required conversion rate to convert TRY back to USD to break even on fees.
